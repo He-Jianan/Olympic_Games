@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.GDPMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.GDP">
+    <result column="YEAR" jdbcType="NUMERIC" property="year" />
+    <result column="GDP_VALUE" jdbcType="NUMERIC" property="gdpValue" />
+    <result column="NATIONALITY" jdbcType="VARCHAR" property="nationality" />
+  </resultMap>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GDP">
+    insert into GDP (YEAR, GDP_VALUE, NATIONALITY
+      )
+    values (#{year,jdbcType=NUMERIC}, #{gdpValue,jdbcType=NUMERIC}, #{nationality,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GDP">
+    insert into GDP
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="gdpValue != null">
+        GDP_VALUE,
+      </if>
+      <if test="nationality != null">
+        NATIONALITY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        #{year,jdbcType=NUMERIC},
+      </if>
+      <if test="gdpValue != null">
+        #{gdpValue,jdbcType=NUMERIC},
+      </if>
+      <if test="nationality != null">
+        #{nationality,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

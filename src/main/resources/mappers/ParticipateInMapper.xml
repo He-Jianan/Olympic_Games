@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.ParticipateInMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.ParticipateIn">
+    <result column="ATHLETE_ID" jdbcType="NUMERIC" property="athleteId" />
+    <result column="YEAR" jdbcType="NUMERIC" property="year" />
+    <result column="SEASON" jdbcType="VARCHAR" property="season" />
+  </resultMap>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.ParticipateIn">
+    insert into PARTICIPATE_IN (ATHLETE_ID, YEAR, SEASON
+      )
+    values (#{athleteId,jdbcType=NUMERIC}, #{year,jdbcType=NUMERIC}, #{season,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.ParticipateIn">
+    insert into PARTICIPATE_IN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="athleteId != null">
+        ATHLETE_ID,
+      </if>
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="season != null">
+        SEASON,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="athleteId != null">
+        #{athleteId,jdbcType=NUMERIC},
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=NUMERIC},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.AthleteEventMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteEventKey">
+    <id column="ATHLETE_ID" jdbcType="NUMERIC" property="athleteId" />
+    <id column="EVENT_ID" jdbcType="NUMERIC" property="eventId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteEventKey">
+    delete from ATHLETE_EVENT
+    where ATHLETE_ID = #{athleteId,jdbcType=NUMERIC}
+      and EVENT_ID = #{eventId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteEventKey">
+    insert into ATHLETE_EVENT (ATHLETE_ID, EVENT_ID)
+    values (#{athleteId,jdbcType=NUMERIC}, #{eventId,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteEventKey">
+    insert into ATHLETE_EVENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="athleteId != null">
+        ATHLETE_ID,
+      </if>
+      <if test="eventId != null">
+        EVENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="athleteId != null">
+        #{athleteId,jdbcType=NUMERIC},
+      </if>
+      <if test="eventId != null">
+        #{eventId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+</mapper>

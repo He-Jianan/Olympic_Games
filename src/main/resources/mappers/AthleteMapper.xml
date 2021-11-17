@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.AthleteMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.Athlete">
+    <id column="ID" jdbcType="NUMERIC" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="SEX" jdbcType="CHAR" property="sex" />
+    <result column="WEIGHT" jdbcType="NUMERIC" property="weight" />
+    <result column="HEIGHT" jdbcType="NUMERIC" property="height" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NAME, SEX, WEIGHT, HEIGHT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ATHLETE
+    where ID = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="queryDetail" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.DetailVo">
+    SELECT *
+    FROM (
+      SELECT ROWNUM AS rn, a.*
+      FROM (
+        SELECT DISTINCT ATHLETE.NAME, ATHLETE.SEX, ATHLETE.HEIGHT, ATHLETE.WEIGHT, country.name as nationality, participate_in.year, participate_in.season
+        FROM ATHLETE, athlete_nationality, country, participate_in
+        WHERE athlete.ID = athlete_nationality.ATHLETE_ID AND athlete_nationality.COUNTRY = country.CODE AND athlete.ID = participate_in.ATHLETE_ID
+          <if test="name != null">
+            AND ATHLETE.NAME LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}),'%')
+          </if>
+          <if test="country != null">
+            AND COUNTRY.NAME = #{country, jdbcType=VARCHAR}
+          </if>
+          <if test="year != null">
+            AND PARTICIPATE_IN.YEAR = #{year, jdbcType=NUMERIC}
+          </if>
+          <if test="season != null">
+            AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR}
+          </if>
+      ) a
+      WHERE ROWNUM &lt;= #{endRow, jdbcType=NUMERIC}
+    ) b
+    WHERE b.rn &gt;= #{startRow, jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from ATHLETE
+    where ID = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Athlete">
+    insert into ATHLETE (ID, NAME, SEX, WEIGHT, 
+      HEIGHT)
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{weight,jdbcType=NUMERIC}, 
+      #{height,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Athlete">
+    insert into ATHLETE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="weight != null">
+        WEIGHT,
+      </if>
+      <if test="height != null">
+        HEIGHT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=NUMERIC},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Athlete">
+    update ATHLETE
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="weight != null">
+        WEIGHT = #{weight,jdbcType=NUMERIC},
+      </if>
+      <if test="height != null">
+        HEIGHT = #{height,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Athlete">
+    update ATHLETE
+    set NAME = #{name,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=CHAR},
+      WEIGHT = #{weight,jdbcType=NUMERIC},
+      HEIGHT = #{height,jdbcType=NUMERIC}
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.EventMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.Event">
+    <id column="ID" jdbcType="NUMERIC" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NAME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from EVENT
+    where ID = #{id,jdbcType=NUMERIC}
+  </select>
+  <select id="queryAll" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.EventVo">
+    SELECT EVENT.NAME
+    FROM EVENT, GAME_EVENT
+    WHERE EVENT.ID = GAME_EVENT.EVENT_ID AND GAME_EVENT.SEASON = #{season, jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from EVENT
+    where ID = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Event">
+    insert into EVENT (ID, NAME)
+    values (#{id,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Event">
+    insert into EVENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Event">
+    update EVENT
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Event">
+    update EVENT
+    set NAME = #{name,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

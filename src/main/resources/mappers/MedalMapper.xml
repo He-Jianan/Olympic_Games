@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.MedalMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal">
+    <id column="ID" jdbcType="NUMERIC" property="id" />
+    <result column="EVENT_ID" jdbcType="NUMERIC" property="eventId" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="MEDAL_TYPE" jdbcType="VARCHAR" property="medalType" />
+    <result column="ATHLETE_ID" jdbcType="NUMERIC" property="athleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, EVENT_ID, STATUS, MEDAL_TYPE, ATHLETE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MEDAL
+    where ID = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from MEDAL
+    where ID = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal">
+    insert into MEDAL (ID, EVENT_ID, STATUS, 
+      MEDAL_TYPE, ATHLETE_ID)
+    values (#{id,jdbcType=NUMERIC}, #{eventId,jdbcType=NUMERIC}, #{status,jdbcType=VARCHAR}, 
+      #{medalType,jdbcType=VARCHAR}, #{athleteId,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal">
+    insert into MEDAL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="eventId != null">
+        EVENT_ID,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="medalType != null">
+        MEDAL_TYPE,
+      </if>
+      <if test="athleteId != null">
+        ATHLETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="eventId != null">
+        #{eventId,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="medalType != null">
+        #{medalType,jdbcType=VARCHAR},
+      </if>
+      <if test="athleteId != null">
+        #{athleteId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal">
+    update MEDAL
+    <set>
+      <if test="eventId != null">
+        EVENT_ID = #{eventId,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="medalType != null">
+        MEDAL_TYPE = #{medalType,jdbcType=VARCHAR},
+      </if>
+      <if test="athleteId != null">
+        ATHLETE_ID = #{athleteId,jdbcType=NUMERIC},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal">
+    update MEDAL
+    set EVENT_ID = #{eventId,jdbcType=NUMERIC},
+      STATUS = #{status,jdbcType=VARCHAR},
+      MEDAL_TYPE = #{medalType,jdbcType=VARCHAR},
+      ATHLETE_ID = #{athleteId,jdbcType=NUMERIC}
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+</mapper>

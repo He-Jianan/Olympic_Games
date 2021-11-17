@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.CountryMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.Country">
+    <id column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="REGION" jdbcType="VARCHAR" property="region" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CODE, NAME, REGION
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from COUNTRY
+    where CODE = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="queryAll" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.CountryVo">
+    select distinct name
+    from country
+  </select>
+  <select id="queryAllRegion" resultType="java.lang.String">
+    select distinct region
+    from country
+    where region is not null
+  </select>
+  <select id="queryAthleteRatio" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.AthleteRatioVo">
+    SELECT a.YEAR, a.PART_COUNT/b.TOTAL_COUNT * 100 AS ratio
+    FROM (
+           SELECT ATHLETE_EVENT.YEAR, COUNT(ATHLETE.ID) as part_count
+           FROM ATHLETE, ATHLETE_NATIONALITY, COUNTRY, ATHLETE_EVENT, EVENT
+           WHERE ATHLETE.ID = ATHLETE_NATIONALITY.ATHLETE_ID AND ATHLETE_NATIONALITY.COUNTRY = COUNTRY.CODE AND ATHLETE.ID = ATHLETE_EVENT.ATHLETE_ID AND ATHLETE_EVENT.EVENT_ID = EVENT.ID
+             AND REGION = #{region, jdbcType=VARCHAR} AND EVENT.NAME = #{event, jdbcType=VARCHAR}
+           GROUP BY ATHLETE_EVENT.YEAR
+           ORDER BY ATHLETE_EVENT.YEAR ASC
+         ) a, (
+           SELECT ATHLETE_EVENT.YEAR, COUNT(ATHLETE.ID) AS total_count
+           FROM ATHLETE, ATHLETE_NATIONALITY, COUNTRY, ATHLETE_EVENT, EVENT
+           WHERE ATHLETE.ID = ATHLETE_NATIONALITY.ATHLETE_ID AND ATHLETE_NATIONALITY.COUNTRY = COUNTRY.CODE AND ATHLETE.ID = ATHLETE_EVENT.ATHLETE_ID AND ATHLETE_EVENT.EVENT_ID = EVENT.ID
+             AND EVENT.NAME = #{event, jdbcType=VARCHAR}
+           GROUP BY ATHLETE_EVENT.YEAR
+           ORDER BY ATHLETE_EVENT.YEAR ASC
+         ) b
+    WHERE a.YEAR = b.YEAR
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from COUNTRY
+    where CODE = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Country">
+    insert into COUNTRY (CODE, NAME, REGION
+      )
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Country">
+    insert into COUNTRY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="region != null">
+        REGION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Country">
+    update COUNTRY
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        REGION = #{region,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CODE = #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.Country">
+    update COUNTRY
+    set NAME = #{name,jdbcType=VARCHAR},
+      REGION = #{region,jdbcType=VARCHAR}
+    where CODE = #{code,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.OlympicGamesMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGames">
+    <id column="YEAR" jdbcType="NUMERIC" property="year" />
+    <id column="SEASON" jdbcType="VARCHAR" property="season" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    YEAR, SEASON, CITY
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGamesKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from OLYMPIC_GAMES
+    where YEAR = #{year,jdbcType=NUMERIC}
+      and SEASON = #{season,jdbcType=VARCHAR}
+  </select>
+  <select id="queryMedalNum" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.HostCountryVo">
+    (SELECT a.YEAR, a.NAME, b.MEDALNUM
+     FROM (
+            SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+            FROM OLYMPIC_GAMES, COUNTRY
+            WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+              AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
+            ORDER BY OLYMPIC_GAMES.NUM
+          ) a, (
+            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = #{season, jdbcType=VARCHAR}
+            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          ) b
+     WHERE a.NAME = b.NAME AND a.YEAR = b.YEAR)
+    UNION
+    (SELECT d.*, b.MEDALNUM
+     FROM (
+            SELECT c.YEAR, b.NAME
+            FROM (
+                   SELECT a.NUM + 1 AS NEXT_NUM, a.YEAR, a.NAME
+                   FROM(
+                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+                         FROM OLYMPIC_GAMES, COUNTRY
+                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
+                         ORDER BY OLYMPIC_GAMES.NUM
+                       ) a
+                 ) b, (
+                   SELECT a.NUM, a.YEAR, a.NAME
+                   FROM(
+                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+                         FROM OLYMPIC_GAMES, COUNTRY
+                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
+                         ORDER BY OLYMPIC_GAMES.NUM
+                       ) a
+                 ) c
+            WHERE b.NEXT_NUM = c.NUM
+          ) d, (
+            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = 'Normal'
+            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          ) b
+     WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR)
+    UNION
+    (SELECT d.*, b.MEDALNUM
+     FROM (
+            SELECT c.YEAR, b.NAME
+            FROM (
+                   SELECT a.NUM - 1 AS NEXT_NUM, a.YEAR, a.NAME
+                   FROM(
+                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+                         FROM OLYMPIC_GAMES, COUNTRY
+                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
+                         ORDER BY OLYMPIC_GAMES.NUM
+                       ) a
+                 ) b, (
+                   SELECT a.NUM, a.YEAR, a.NAME
+                   FROM(
+                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+                         FROM OLYMPIC_GAMES, COUNTRY
+                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
+                         ORDER BY OLYMPIC_GAMES.NUM
+                       ) a
+                 ) c
+            WHERE b.NEXT_NUM = c.NUM
+          ) d, (
+            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = 'Normal'
+            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          ) b
+     WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR)
+
+
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGamesKey">
+    delete from OLYMPIC_GAMES
+    where YEAR = #{year,jdbcType=NUMERIC}
+      and SEASON = #{season,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGames">
+    insert into OLYMPIC_GAMES (YEAR, SEASON, CITY
+      )
+    values (#{year,jdbcType=NUMERIC}, #{season,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGames">
+    insert into OLYMPIC_GAMES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="season != null">
+        SEASON,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        #{year,jdbcType=NUMERIC},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGames">
+    update OLYMPIC_GAMES
+    <set>
+      <if test="city != null">
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where YEAR = #{year,jdbcType=NUMERIC}
+      and SEASON = #{season,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.OlympicGames">
+    update OLYMPIC_GAMES
+    set CITY = #{city,jdbcType=VARCHAR}
+    where YEAR = #{year,jdbcType=NUMERIC}
+      and SEASON = #{season,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.AthleteNationalityMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteNationalityKey">
+    <id column="COUNTRY" jdbcType="VARCHAR" property="country" />
+    <id column="ATHLETE_ID" jdbcType="NUMERIC" property="athleteId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteNationalityKey">
+    delete from ATHLETE_NATIONALITY
+    where COUNTRY = #{country,jdbcType=VARCHAR}
+      and ATHLETE_ID = #{athleteId,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteNationalityKey">
+    insert into ATHLETE_NATIONALITY (COUNTRY, ATHLETE_ID)
+    values (#{country,jdbcType=VARCHAR}, #{athleteId,jdbcType=NUMERIC})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.AthleteNationalityKey">
+    insert into ATHLETE_NATIONALITY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="country != null">
+        COUNTRY,
+      </if>
+      <if test="athleteId != null">
+        ATHLETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="athleteId != null">
+        #{athleteId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ufl.cise.dbms.group6.olympic_games.dao.GameEventMapper">
+  <resultMap id="BaseResultMap" type="edu.ufl.cise.dbms.group6.olympic_games.pojo.GameEvent">
+    <result column="YEAR" jdbcType="NUMERIC" property="year" />
+    <result column="SEASON" jdbcType="VARCHAR" property="season" />
+    <result column="EVENT_ID" jdbcType="NUMERIC" property="eventId" />
+  </resultMap>
+  <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GameEvent">
+    insert into GAME_EVENT (YEAR, SEASON, EVENT_ID
+      )
+    values (#{year,jdbcType=NUMERIC}, #{season,jdbcType=VARCHAR}, #{eventId,jdbcType=NUMERIC}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GameEvent">
+    insert into GAME_EVENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="season != null">
+        SEASON,
+      </if>
+      <if test="eventId != null">
+        EVENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="year != null">
+        #{year,jdbcType=NUMERIC},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="eventId != null">
+        #{eventId,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+</mapper>
