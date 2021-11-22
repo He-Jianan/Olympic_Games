@@ -6,6 +6,21 @@
     <result column="GDP_VALUE" jdbcType="NUMERIC" property="gdpValue" />
     <result column="NATIONALITY" jdbcType="VARCHAR" property="nationality" />
   </resultMap>
+  <select id="ParticipateGdp" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.GdpVo">
+    select ag.year,ag.numberofparticipants,ag.rate,ag.gdp_value from country c,
+    (select x.year,x.country,x.numberofparticipants,x.rate,g.gdp_value from gdp g,
+    (select z.year,z.country,z.numberofparticipants, z.numberofparticipants/z1.numberofparticipants AS rate from
+    (select ge.year,an.country,count(distinct a.id) AS NumberOfParticipants from
+    athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge
+    where ge.season=#{season, jdbcType=VARCHAR} and c.name=#{name, jdbcType=VARCHAR} and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and
+     an.country = c.code and ae.event_id= ge.event_id group by ge.year,an.country order by ge.year ASC)z
+    INNER JOIN (select ge.year,an.country,count(distinct a.id) AS NumberOfParticipants from
+    athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge
+    where ge.season=#{season, jdbcType=VARCHAR} and c.name=#{name, jdbcType=VARCHAR} and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and
+    an.country = c.code and ae.event_id= ge.event_id group by ge.year,an.country order by ge.year ASC)z1 on z.year-4 = z1.year and z.country=z1.country)x
+    where x.year = g.year and x.country = g.nationality ORDER BY x.year ASC, x.country ASC) ag
+    where c.code = ag.country
+  </select>
   <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GDP">
     insert into GDP (YEAR, GDP_VALUE, NATIONALITY
       )

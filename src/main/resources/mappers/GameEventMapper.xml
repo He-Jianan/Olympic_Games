@@ -6,6 +6,26 @@
     <result column="SEASON" jdbcType="VARCHAR" property="season" />
     <result column="EVENT_ID" jdbcType="NUMERIC" property="eventId" />
   </resultMap>
+  <select id="Topevent" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.TopVo">
+    select x3.year,x3.eventname,x3.maxevent,x4.numberofparticipants ,x3.maxevent/x4.numberofparticipants AS ratio from
+                                                                                                                            (select x2.year,x2.name,x2.eventname,x1.maxevent from
+                                                                                                                                                                               (select z.year,z.name,MAX(z.eachevent) AS maxevent from
+                                                                                                                                                                                 (select ge.year,c.name,e.name AS eventname,count(distinct a.id) AS eachevent from
+                                                                                                                                                                                                                                                                athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge,event e
+                                                                                                                                                                                  where ge.season=#{season, jdbcType=VARCHAR} and c.name=#{name, jdbcType=VARCHAR} and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and ae.event_id = e.id and
+                                                                                                                                                                                    an.country = c.code and ae.event_id= ge.event_id group by ge.year,c.name,e.name order by ge.year ASC)z
+                                                                                                                                                                                group by z.year,z.name order by z.year ASC)x1,
+                                                                                                                                                                               (select ge.year,c.name,e.name AS eventname,count(distinct a.id) AS eachevent from
+                                                                                                                                                                                                                                                              athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge,event e
+                                                                                                                                                                                where ge.season=#{season, jdbcType=VARCHAR} and c.name=#{name, jdbcType=VARCHAR} and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and ae.event_id = e.id and
+                                                                                                                                                                                  an.country = c.code and ae.event_id= ge.event_id group by ge.year,c.name,e.name order by ge.year ASC)x2
+                                                                                                                             where x1.maxevent = x2.eachevent and x1.year = x2.year and x1.name = x2.name)x3,
+                                                                                                                            (select ge.year,c.name,count(distinct a.id) AS NumberOfParticipants from
+                                                                                                                                                                                                  athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge
+                                                                                                                             where ge.season='Summer' and c.name='China' and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and
+                                                                                                                               an.country = c.code and ae.event_id= ge.event_id group by ge.year,c.name order by ge.year ASC)x4
+    where x3.year = x4.year and x3.name=x4.name
+  </select>
   <insert id="insert" parameterType="edu.ufl.cise.dbms.group6.olympic_games.pojo.GameEvent">
     insert into GAME_EVENT (YEAR, SEASON, EVENT_ID
       )
