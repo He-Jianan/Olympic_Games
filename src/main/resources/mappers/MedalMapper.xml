@@ -17,6 +17,42 @@
     from MEDAL
     where ID = #{id,jdbcType=NUMERIC}
   </select>
+
+
+  <select id="queryStrippedMedal" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedVo">
+    select a.year,a.season,a.name as country,a.stripped/b.normal as ratio
+    from
+      (select country.name,nationality.year,olympic_games.season,count(medal.athlete_id) as stripped
+       from medal,athlete_event,nationality,country,olympic_games
+       where medal.athlete_id=athlete_event.athlete_id
+         and country.code=nationality.country
+         and medal.year=athlete_event.year
+         and olympic_games.year=medal.year
+         and medal.event_id=athlete_event.event_id
+         and nationality.year=athlete_event.year
+         and nationality.athlete_id=medal.athlete_id
+         and medal.status='Stripped'
+       group by country.name,nationality.year,olympic_games.season)a,
+      (select country.name,nationality.year,olympic_games.season,count(medal.athlete_id) as normal
+       from medal,athlete_event,nationality,country,olympic_games
+       where medal.athlete_id=athlete_event.athlete_id
+         and country.code=nationality.country
+         and medal.year=athlete_event.year
+         and olympic_games.year=medal.year
+         and medal.event_id=athlete_event.event_id
+         and nationality.year=athlete_event.year
+         and nationality.athlete_id=medal.athlete_id
+         and medal.status='Normal'
+       group by country.name,nationality.year,olympic_games.season)b
+    where a.name=b.name
+      and a.name = #{country,jdbcType=VARCHAR}
+      and a.year=b.year
+      and a.season=b.season
+      and a.season= #{season,jdbcType=VARCHAR}
+    order by a.year
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
     delete from MEDAL
     where ID = #{id,jdbcType=NUMERIC}

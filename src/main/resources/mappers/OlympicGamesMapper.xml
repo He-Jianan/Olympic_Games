@@ -16,6 +16,26 @@
     where YEAR = #{year,jdbcType=NUMERIC}
       and SEASON = #{season,jdbcType=VARCHAR}
   </select>
+
+  <select id="queryGenderRatio" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.GenderRatioVo">
+      select a.year,a.season,b.male/a.female as ratio
+      from
+          (select participate_in.year, participate_in.season,athlete.sex,count(athlete.ID) as female
+           from participate_in,athlete
+           where athlete.sex='F'
+             and athlete.id=participate_in.athlete_id
+           group by participate_in.year, participate_in.season,athlete.sex) a,
+          (select participate_in.year, participate_in.season,athlete.sex,count(athlete.ID) as male
+           from participate_in,athlete
+           where athlete.sex='M'
+             and athlete.id=participate_in.athlete_id
+           group by participate_in.year, participate_in.season,athlete.sex) b
+      where a.year=b.year
+        and a.season=b.season
+        and a.season=#{season,jdbcType=VARCHAR}
+      order by year
+  </select>
+
   <select id="queryMedalNum" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.HostCountryVo">
     (SELECT a.YEAR, a.NAME, b.MEDALNUM
      FROM (
