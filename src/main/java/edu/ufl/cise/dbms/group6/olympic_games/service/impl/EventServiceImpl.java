@@ -18,7 +18,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ResponseVo<List<EventVo>> queryAllEvent(EventForm eventForm) {
-        List<EventVo> list = eventMapper.queryAll(eventForm.getSeason());
+        String season = eventForm.getSeason();
+        if (season.equals("summer") || season.equals("winter")) {
+            return ResponseVo.error("The first letter should be capital!");
+        }
+
+        List<EventVo> list = eventMapper.queryAll(season);
         return ResponseVo.success(list);
     }
 }

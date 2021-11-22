@@ -19,9 +19,10 @@ public class GdpRatioController {
     @Autowired
     private GdpRatioService GdpRatioService;
 
-    @GetMapping("/ParticipateGdp")
+    @GetMapping("/gdp")
     @Operation(summary = "Participate Gdp Ratio")
-    public ResponseVo<List<GdpVo>> ParticipateGdp(@RequestParam String season,@RequestParam String name){
-        return GdpRatioService.ParticipateGdp(season,name);
+    public ResponseVo<List<GdpVo>> ParticipateGdp(@RequestParam(required = false, defaultValue = "Summer") String season,
+                                                  @RequestParam(required = false, defaultValue = "United States") String countryName){
+        return GdpRatioService.ParticipateGdp(season,countryName);
     }
 }

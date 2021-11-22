@@ -24,6 +24,10 @@ public class ResponseVo<T> {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc(), data);
     }
 
+    public static ResponseVo error(String message) {
+        return new ResponseVo(ResponseEnum.ERROR.getCode(), message);
+    }
+
     public Integer getStatus() {
         return status;
     }

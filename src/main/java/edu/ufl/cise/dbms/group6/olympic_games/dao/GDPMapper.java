@@ -10,5 +10,5 @@ public interface GDPMapper {
 
     int insertSelective(GDP record);
 
-    List<GdpVo> ParticipateGdp(String season ,String name);
+    List<GdpVo> participateGdp(String season , String name);
 }

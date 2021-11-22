@@ -22,10 +22,11 @@ public class TopeventController {
     @Autowired
     private TopeventService TopeventService;
 
-    @GetMapping("/Topevent")
+    @GetMapping("/eventRatio")
     @Operation(summary = "Top event")
-    public ResponseVo<List<TopVo>> Topevent(@RequestParam String season, @RequestParam String name){
-        return TopeventService.Topevent(season,name);
+    public ResponseVo<List<TopVo>> Topevent(@RequestParam(required = false, defaultValue = "Summer") String season,
+                                            @RequestParam(required = false, defaultValue = "United States") String countryName){
+        return TopeventService.Topevent(season,countryName);
     }
 
 }

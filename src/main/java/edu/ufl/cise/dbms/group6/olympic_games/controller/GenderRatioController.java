@@ -19,7 +19,7 @@ public class GenderRatioController {
     @Autowired
     private GenderRatioService genderRatioService;
 
-    @GetMapping("/genderRatio")
+    @GetMapping("/sexRatio")
     @Operation(summary = "Query Gender Ratio")
     public ResponseVo<List<GenderRatioVo>> queryGenderRatio(@RequestParam String season) {
         return genderRatioService.queryGenderRatio(season);

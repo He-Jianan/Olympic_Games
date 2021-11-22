@@ -2,7 +2,6 @@ package edu.ufl.cise.dbms.group6.olympic_games.service.impl;
 
 import edu.ufl.cise.dbms.group6.olympic_games.dao.GDPMapper;
 import edu.ufl.cise.dbms.group6.olympic_games.service.GdpRatioService;
-import edu.ufl.cise.dbms.group6.olympic_games.vo.AthleteRatioVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.GdpVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class GdpRatioServiceImpl implements GdpRatioService {
 
     @Override
     public ResponseVo<List<GdpVo>> ParticipateGdp(String season, String name) {
-        List<GdpVo> list = gdpMapper.ParticipateGdp(season, name);
+        List<GdpVo> list = gdpMapper.participateGdp(season, name);
         return ResponseVo.success(list);
     }
 

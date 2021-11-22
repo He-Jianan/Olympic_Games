@@ -10,7 +10,7 @@
     </parent>
     <groupId>edu.ufl.cise.dbms.group6</groupId>
     <artifactId>Olympic_Games</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Olympic_Games</name>
     <description>Olympic_Games</description>
     <properties>

@@ -20,7 +20,7 @@ public class HostAdvantageController {
 
     @GetMapping("/hostAdvantage")
     @Operation(summary = "Query Host Country Medal Number")
-    public ResponseVo<List<HostCountryVo>> queryHostAdvantage (@RequestParam String season) {
+    public ResponseVo<List<HostCountryVo>> queryHostAdvantage (@RequestParam(required = false, defaultValue = "Summer") String season) {
         return hostAdvantageService.queryMedalNum(season);
     }
 }
