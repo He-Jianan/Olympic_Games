@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DetailServiceImpl implements DetailService {
@@ -21,9 +22,12 @@ public class DetailServiceImpl implements DetailService {
         Integer startRow = (pageNum - 1) * pageSize + 1;
         Integer endRow = pageNum * pageSize;
         List<DetailVo> list = athleteMapper.queryDetail(startRow, endRow, name, country, year, season);
+        int totalCount = athleteMapper.count();
+        int pages = (int) Math.ceil((double) totalCount/(double) pageSize);
         PageHelper.startPage(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(list);
         pageInfo.setList(list);
+        pageInfo.setPages(pages);
         return ResponseVo.success(pageInfo);
     }
 }

@@ -22,7 +22,7 @@
     FROM (
       SELECT ROWNUM AS rn, a.*
       FROM (
-        SELECT DISTINCT ATHLETE.NAME, ATHLETE.SEX, ATHLETE.HEIGHT, ATHLETE.WEIGHT, country.name as nationality, participate_in.year, participate_in.season
+        SELECT DISTINCT ATHLETE.NAME, ATHLETE.SEX, ATHLETE.HEIGHT, ATHLETE.WEIGHT, country.name as country, participate_in.year, participate_in.season
         FROM ATHLETE, athlete_nationality, country, participate_in
         WHERE athlete.ID = athlete_nationality.ATHLETE_ID AND athlete_nationality.COUNTRY = country.CODE AND athlete.ID = participate_in.ATHLETE_ID
           <if test="name != null">
@@ -42,6 +42,15 @@
     ) b
     WHERE b.rn &gt;= #{startRow, jdbcType=NUMERIC}
   </select>
+  <select id="count" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM (
+           SELECT DISTINCT ATHLETE.NAME, ATHLETE.SEX, ATHLETE.HEIGHT, ATHLETE.WEIGHT, country.name as nationality, participate_in.year, participate_in.season
+           FROM ATHLETE, athlete_nationality, country, participate_in
+           WHERE athlete.ID = athlete_nationality.ATHLETE_ID AND athlete_nationality.COUNTRY = country.CODE AND athlete.ID = participate_in.ATHLETE_ID
+         )
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
     delete from ATHLETE
     where ID = #{id,jdbcType=NUMERIC}

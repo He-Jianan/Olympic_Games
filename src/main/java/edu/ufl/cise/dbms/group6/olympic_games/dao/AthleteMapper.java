@@ -20,4 +20,6 @@ public interface AthleteMapper {
     int updateByPrimaryKey(Athlete record);
 
     List<DetailVo> queryDetail(Integer startRow, Integer endRow, String name, String country, Integer year, String season);
+
+    int count();
 }

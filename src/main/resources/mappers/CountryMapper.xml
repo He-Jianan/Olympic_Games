@@ -16,8 +16,9 @@
     where CODE = #{code,jdbcType=VARCHAR}
   </select>
   <select id="queryAll" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.CountryVo">
-    select distinct name
-    from country
+    select distinct Country.name
+    from country, nationality
+    where country.code = nationality.country
   </select>
   <select id="queryAllRegion" resultType="java.lang.String">
     select distinct region
