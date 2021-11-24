@@ -21,7 +21,7 @@ public class StrippedController {
     @GetMapping("/strippedMedal")
     @Operation(summary = "Query Stripped Medal")
     public ResponseVo<List<StrippedVo>> queryStrippedMedal(@RequestParam(required = false, defaultValue = "Summer") String season,
-                                                           @RequestParam(required = false, defaultValue = "United States") String countryName) {
+                                                           @RequestParam(required = false) String countryName) {
         return strippedService.queryStrippedMedal(season,countryName);
     }
 }

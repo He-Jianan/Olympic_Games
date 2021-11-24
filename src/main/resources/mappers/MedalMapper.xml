@@ -45,7 +45,9 @@
          and medal.status='Normal'
        group by country.name,nationality.year,olympic_games.season)b
     where a.name=b.name
+    <if test="country != null">
       and a.name = #{country,jdbcType=VARCHAR}
+    </if>
       and a.year=b.year
       and a.season=b.season
       and a.season= #{season,jdbcType=VARCHAR}
