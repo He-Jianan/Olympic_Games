@@ -37,85 +37,88 @@
   </select>
 
   <select id="queryMedalNum" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.HostCountryVo">
-    (SELECT a.YEAR, a.NAME, b.MEDALNUM
-     FROM (
-            SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
-            FROM OLYMPIC_GAMES, COUNTRY
-            WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
-              AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
-            ORDER BY OLYMPIC_GAMES.NUM
+      SELECT YEAR, NAME AS HOST, MEDALNUM
+      FROM (
+          (SELECT a.YEAR, a.NAME , b.MEDALNUM
+          FROM (
+          SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+          FROM OLYMPIC_GAMES, COUNTRY
+          WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+          AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+          ORDER BY OLYMPIC_GAMES.NUM
           ) a, (
-            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
-            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
-            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
-              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = #{season, jdbcType=VARCHAR}
-            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+          FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+          WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+          AND PARTICIPATE_IN.SEASON = #{season, jdbcType = VARCHAR} AND MEDAL.STATUS = 'Normal'
+          GROUP BY COUNTRY.NAME, MEDAL.YEAR
           ) b
-     WHERE a.NAME = b.NAME AND a.YEAR = b.YEAR)
-    UNION
-    (SELECT d.*, b.MEDALNUM
-     FROM (
-            SELECT c.YEAR, b.NAME
-            FROM (
-                   SELECT a.NUM + 1 AS NEXT_NUM, a.YEAR, a.NAME
-                   FROM(
-                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
-                         FROM OLYMPIC_GAMES, COUNTRY
-                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
-                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
-                         ORDER BY OLYMPIC_GAMES.NUM
-                       ) a
-                 ) b, (
-                   SELECT a.NUM, a.YEAR, a.NAME
-                   FROM(
-                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
-                         FROM OLYMPIC_GAMES, COUNTRY
-                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
-                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
-                         ORDER BY OLYMPIC_GAMES.NUM
-                       ) a
-                 ) c
-            WHERE b.NEXT_NUM = c.NUM
+          WHERE a.NAME = b.NAME AND a.YEAR = b.YEAR)
+          UNION
+          (SELECT d.YEAR, d.NAME , b.MEDALNUM
+          FROM (
+          SELECT c.YEAR, b.NAME
+          FROM (
+          SELECT a.NUM + 1 AS NEXT_NUM, a.YEAR, a.NAME
+          FROM(
+          SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+          FROM OLYMPIC_GAMES, COUNTRY
+          WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+          AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+          ORDER BY OLYMPIC_GAMES.NUM
+          ) a
+          ) b, (
+          SELECT a.NUM, a.YEAR, a.NAME
+          FROM(
+          SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+          FROM OLYMPIC_GAMES, COUNTRY
+          WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+          AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+          ORDER BY OLYMPIC_GAMES.NUM
+          ) a
+          ) c
+          WHERE b.NEXT_NUM = c.NUM
           ) d, (
-            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
-            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
-            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
-              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = 'Normal'
-            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+          FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+          WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+          AND PARTICIPATE_IN.SEASON = #{season, jdbcType = VARCHAR} AND MEDAL.STATUS = 'Normal'
+          GROUP BY COUNTRY.NAME, MEDAL.YEAR
           ) b
-     WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR)
-    UNION
-    (SELECT d.*, b.MEDALNUM
-     FROM (
-            SELECT c.YEAR, b.NAME
-            FROM (
-                   SELECT a.NUM - 1 AS NEXT_NUM, a.YEAR, a.NAME
-                   FROM(
-                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
-                         FROM OLYMPIC_GAMES, COUNTRY
-                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
-                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
-                         ORDER BY OLYMPIC_GAMES.NUM
-                       ) a
-                 ) b, (
-                   SELECT a.NUM, a.YEAR, a.NAME
-                   FROM(
-                         SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
-                         FROM OLYMPIC_GAMES, COUNTRY
-                         WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
-                           AND OLYMPIC_GAMES.SEASON = #{season, jdbcType=VARCHAR}
-                         ORDER BY OLYMPIC_GAMES.NUM
-                       ) a
-                 ) c
-            WHERE b.NEXT_NUM = c.NUM
+          WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR)
+          UNION
+          (SELECT d.YEAR, d.NAME, b.MEDALNUM
+          FROM (
+          SELECT c.YEAR, b.NAME
+          FROM (
+          SELECT a.NUM - 1 AS NEXT_NUM, a.YEAR, a.NAME
+          FROM(
+          SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+          FROM OLYMPIC_GAMES, COUNTRY
+          WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+          AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+          ORDER BY OLYMPIC_GAMES.NUM
+          ) a
+          ) b, (
+          SELECT a.NUM, a.YEAR, a.NAME
+          FROM(
+          SELECT OLYMPIC_GAMES.NUM, OLYMPIC_GAMES.YEAR, COUNTRY.NAME
+          FROM OLYMPIC_GAMES, COUNTRY
+          WHERE OLYMPIC_GAMES.COUNTRY = COUNTRY.CODE
+          AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+          ORDER BY OLYMPIC_GAMES.NUM
+          ) a
+          ) c
+          WHERE b.NEXT_NUM = c.NUM
           ) d, (
-            SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
-            FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
-            WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
-              AND PARTICIPATE_IN.SEASON = #{season, jdbcType=VARCHAR} AND MEDAL.STATUS = 'Normal'
-            GROUP BY COUNTRY.NAME, MEDAL.YEAR
+          SELECT COUNTRY.NAME, MEDAL.YEAR, COUNT(*) AS medalNum
+          FROM COUNTRY, ATHLETE_NATIONALITY, ATHLETE, MEDAL, PARTICIPATE_IN
+          WHERE COUNTRY.CODE = ATHLETE_NATIONALITY.COUNTRY AND ATHLETE_NATIONALITY.ATHLETE_ID = ATHLETE.ID AND ATHLETE.ID = PARTICIPATE_IN.ATHLETE_ID AND ATHLETE.ID = MEDAL.ATHLETE_ID
+          AND PARTICIPATE_IN.SEASON = #{season, jdbcType = VARCHAR} AND MEDAL.STATUS = 'Normal'
+          GROUP BY COUNTRY.NAME, MEDAL.YEAR
           ) b
-     WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR)
+          WHERE d.NAME = b.NAME AND d.YEAR = b.YEAR))
+      ORDER BY NAME, YEAR
 
 
 
