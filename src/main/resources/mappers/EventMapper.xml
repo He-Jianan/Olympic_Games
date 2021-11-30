@@ -19,6 +19,34 @@
     FROM EVENT, GAME_EVENT
     WHERE EVENT.ID = GAME_EVENT.EVENT_ID AND GAME_EVENT.SEASON = #{season, jdbcType=VARCHAR}
   </select>
+  <select id="countAllTuples" resultType="java.lang.Integer">
+    select a.aa+b.bb+c.cc+d.dd+e.ee+f.ff+g.gg+h.hh+i.ii+j.jj+k.kk+l.ll as tuplesNum
+    from
+      (select count(*) as aa
+       from athlete) a,
+      (select count(*) as bb
+       from athlete_event) b,
+      (select count(*) as cc
+       from athlete_nationality) c,
+      (select count(*) as dd
+       from city) d,
+      (select count(*) as ee
+       from country) e,
+      (select count(*) as ff
+       from event) f,
+      (select count(*) as gg
+       from game_event) g,
+      (select count(*) as hh
+       from gdp) h,
+      (select count(*) as ii
+       from medal) i,
+      (select count(*) as jj
+       from olympic_games) j,
+      (select count(*) as kk
+       from participate_in) k,
+      (select count(*) as ll
+       from stripped) l
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
     delete from EVENT
     where ID = #{id,jdbcType=NUMERIC}

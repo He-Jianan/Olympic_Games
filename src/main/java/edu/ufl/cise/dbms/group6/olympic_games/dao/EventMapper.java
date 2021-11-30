@@ -20,4 +20,6 @@ public interface EventMapper {
     int updateByPrimaryKey(Event record);
 
     List<EventVo> queryAll (String season);
+
+    int countAllTuples();
 }
