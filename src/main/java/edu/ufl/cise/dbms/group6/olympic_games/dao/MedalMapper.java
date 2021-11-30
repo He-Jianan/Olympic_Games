@@ -1,6 +1,7 @@
 package edu.ufl.cise.dbms.group6.olympic_games.dao;
 
 import edu.ufl.cise.dbms.group6.olympic_games.pojo.Medal;
+import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedCountryVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedVo;
 
 import java.math.BigDecimal;
@@ -20,5 +21,7 @@ public interface MedalMapper {
     int updateByPrimaryKey(Medal record);
 
     List<StrippedVo> queryStrippedMedal(String season,String country);
+
+    List<StrippedCountryVo> queryStrippedCountry(String season);
 
 }

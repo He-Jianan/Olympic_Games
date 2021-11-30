@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = "count all tuples in database")
+@Api(tags = "Count all tuples in database")
 public class CountAllTupleController {
 
     @Autowired

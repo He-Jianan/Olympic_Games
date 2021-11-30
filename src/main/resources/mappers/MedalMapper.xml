@@ -53,6 +53,21 @@
       and a.season= #{season,jdbcType=VARCHAR}
     order by a.year
   </select>
+  <select id="queryStrippedCountry" resultType="edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedCountryVo">
+    select nationality.year,olympic_games.season,count(distinct country.name) as stripped
+    from medal,athlete_event,nationality,country,olympic_games
+    where medal.athlete_id=athlete_event.athlete_id
+      and country.code=nationality.country
+      and medal.year=athlete_event.year
+      and olympic_games.year=medal.year
+      and medal.event_id=athlete_event.event_id
+      and nationality.year=athlete_event.year
+      and nationality.athlete_id=medal.athlete_id
+      and medal.status='Stripped'
+      AND OLYMPIC_GAMES.SEASON = #{season, jdbcType = VARCHAR}
+    group by nationality.year,olympic_games.season
+    ORDER BY YEAR ASC
+  </select>
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
