@@ -320,8 +320,10 @@
               and medal.status='Stripped'
               and event.name like '%Wrestling%'
             group by medal.year,olympic_games.season)a）
-        where event=#{eventName,jdbcType=NUMERIC}
-        and season=#{season,jdbcType=NUMERIC}
+        where season=#{season,jdbcType=VARCHAR}
+        <if test="eventName != null">
+          and event=#{eventName,jdbcType=VARCHAR}
+        </if>
         order by year asc
   </select>
 
