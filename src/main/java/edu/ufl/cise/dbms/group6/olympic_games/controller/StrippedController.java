@@ -2,6 +2,7 @@ package edu.ufl.cise.dbms.group6.olympic_games.controller;
 
 import edu.ufl.cise.dbms.group6.olympic_games.service.StrippedService;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedCountryVo;
+import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedEventVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.ResponseVo;
 import io.swagger.annotations.Api;
@@ -31,4 +32,12 @@ public class StrippedController {
     public ResponseVo<List<StrippedCountryVo>> queryStrippedCountry(@RequestParam(required = false, defaultValue = "Summer") String season) {
         return strippedService.queryStrippedCountry(season);
     }
+
+    @GetMapping("/strippedEvent")
+    @Operation(summary = "Query Stripped Medal of Evnets")
+    public ResponseVo<List<StrippedEventVo>> queryStrippedEvent(@RequestParam(required = false, defaultValue = "Summer") String season,
+                                                                @RequestParam(required = false) String eventName) {
+        return strippedService.queryStrippedEvent(season,eventName);
+    }
+
 }

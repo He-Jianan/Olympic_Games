@@ -6,6 +6,7 @@ import edu.ufl.cise.dbms.group6.olympic_games.service.GenderRatioService;
 import edu.ufl.cise.dbms.group6.olympic_games.service.StrippedService;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.GenderRatioVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedCountryVo;
+import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedEventVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.StrippedVo;
 import edu.ufl.cise.dbms.group6.olympic_games.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,10 @@ public class StrippedServiceImpl implements StrippedService {
 
     }
 
+    @Override
+    public ResponseVo<List<StrippedEventVo>> queryStrippedEvent(String season, String eventName) {
+        List<StrippedEventVo> strippedEventVolist = medalMapper.queryStrippedEvent(season,eventName);
+        return ResponseVo.success(strippedEventVolist);
+    }
 
 }
