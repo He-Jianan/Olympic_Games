@@ -22,7 +22,7 @@
                                                                                                                              where x1.maxevent = x2.eachevent and x1.year = x2.year and x1.name = x2.name)x3,
                                                                                                                             (select ge.year,c.name,count(distinct a.id) AS NumberOfParticipants from
                                                                                                                                                                                                   athlete a, athlete_event ae,athlete_nationality an,country c,game_event ge
-                                                                                                                             where ge.season='Summer' and c.name='China' and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and
+                                                                                                                             where ge.season=#{season, jdbcType=VARCHAR} and c.name=#{name, jdbcType=VARCHAR} and ae.year=ge.year and a.id = ae.athlete_id and a.id = an.athlete_id and
                                                                                                                                an.country = c.code and ae.event_id= ge.event_id group by ge.year,c.name order by ge.year ASC)x4
     where x3.year = x4.year and x3.name=x4.name
   </select>
